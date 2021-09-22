@@ -28,15 +28,14 @@ public class AutoVideoCompression {
   public static void createCompressionSettings(String fileUrl,VideoCompressorHelper options,Promise promise, ReactApplicationContext reactContext) {
     float maxSize = options.maxSize;;
     try{
-    Uri uri= Uri.parse(fileUrl);
-    String srcPath = uri.getPath();
-    MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
-    metaRetriever.setDataSource(srcPath);
-    File file=new File(srcPath);
-    float sizeInBytes = file.length();
-    float sizeInMb = sizeInBytes / (1024 * 1024);
-    if(sizeInMb>16)
-    {
+      Uri uri= Uri.parse(fileUrl);
+      String srcPath = uri.getPath();
+      MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+      metaRetriever.setDataSource(srcPath);
+      File file=new File(srcPath);
+      float sizeInBytes = file.length();
+      float sizeInMb = sizeInBytes / (1024 * 1024);
+
       String destinationPath = generateCacheFilePath("mp4", reactContext);
       int actualHeight =Integer.parseInt(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
       int actualWidth = Integer.parseInt(metaRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
@@ -77,11 +76,6 @@ public class AutoVideoCompression {
         }
       });
 
-      }
-      else
-      {
-        promise.resolve(fileUrl);
-      }
     } catch (Exception ex) {
       promise.reject(ex);
     }
