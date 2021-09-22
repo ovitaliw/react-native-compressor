@@ -266,8 +266,8 @@ func makeValidUri(filePath: String) -> String {
 
         let bitrate=Float(abs(track.estimatedDataRate));
         let scale:Float = actualWidth > actualHeight ? (Float(maxSize) / actualWidth) : (Float(maxSize) / actualHeight);
-        let resultWidth:Float = round(actualWidth * scale / 2) * 2;
-        let resultHeight:Float = round(actualHeight * scale / 2) * 2;
+        let resultWidth:Float = round(actualHeight * scale / 2) * 2;
+        let resultHeight:Float = round(actualWidth * scale / 2) * 2;
 
         let videoBitRate:Int = self.makeVideoBitrate(
             originalHeight: Int(actualHeight), originalWidth: Int(actualWidth),
