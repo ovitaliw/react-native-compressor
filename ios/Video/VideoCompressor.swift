@@ -30,7 +30,7 @@ struct UploadError: Error {
 @available(iOS 11.0, *)
 @objc(VideoCompressor)
 class VideoCompressor: RCTEventEmitter, URLSessionTaskDelegate {
-  var backgroundTaskId: UIBackgroundTaskIdentifier = .invalid;
+  var backgroundTaskId: UIBackgroundTaskIdentifier = UIBackgroundTaskInvalid;
   var hasListener: Bool=false
   var uploadResolvers: [String: RCTPromiseResolveBlock] = [:]
   var uploadRejectors: [String: RCTPromiseRejectBlock] = [:]
@@ -43,7 +43,7 @@ class VideoCompressor: RCTEventEmitter, URLSessionTaskDelegate {
 
   @objc(activateBackgroundTask:withResolver:withRejecter:)
   func activateBackgroundTask(options: [String: Any], resolve:@escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) -> Void {
-    guard backgroundTaskId == .invalid else {
+    guard backgroundTaskId == UIBackgroundTaskInvalid else {
       reject("failed", "There is a background task already", nil)
       return
     }
@@ -52,20 +52,20 @@ class VideoCompressor: RCTEventEmitter, URLSessionTaskDelegate {
       expirationHandler: {
         self.sendEvent(withName: "backgroundTaskExpired", body: ["backgroundTaskId": self.backgroundTaskId])
         UIApplication.shared.endBackgroundTask(self.backgroundTaskId)
-        self.backgroundTaskId = .invalid
+        self.backgroundTaskId = UIBackgroundTaskInvalid
     })
     resolve(backgroundTaskId)
   }
 
   @objc(deactivateBackgroundTask:withResolver:withRejecter:)
   func deactivateBackgroundTask(options: [String: Any], resolve:@escaping RCTPromiseResolveBlock, reject:@escaping RCTPromiseRejectBlock) -> Void {
-    guard backgroundTaskId != .invalid else {
+    guard backgroundTaskId != UIBackgroundTaskInvalid else {
       reject("failed", "There is no active background task", nil)
         return
     }
     UIApplication.shared.endBackgroundTask(backgroundTaskId)
     resolve(nil)
-    backgroundTaskId = .invalid
+    backgroundTaskId = UIBackgroundTaskInvalid
   }
 
   @objc(compress:withOptions:withResolver:withRejecter:)
@@ -266,8 +266,8 @@ func makeValidUri(filePath: String) -> String {
 
         let bitrate=Float(abs(track.estimatedDataRate));
         let scale:Float = actualWidth > actualHeight ? (Float(maxSize) / actualWidth) : (Float(maxSize) / actualHeight);
-        let resultWidth:Float = round(actualHeight * scale / 2) * 2;
-        let resultHeight:Float = round(actualWidth * scale / 2) * 2;
+        let resultWidth:Float = round(actualWidth * scale / 2) * 2;
+        let resultHeight:Float = round(actualHeight * scale / 2) * 2;
 
         let videoBitRate:Int = self.makeVideoBitrate(
             originalHeight: Int(actualHeight), originalWidth: Int(actualWidth),
